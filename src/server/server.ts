@@ -3,13 +3,16 @@ import { AServer } from "../types/abstract-class-server.js";
 import { Database } from "../db/database.js";
 import { HttpError } from "@fastify/sensible";
 import { AuthorRoutes } from "./author.routes.js";
+import { BookRoutes } from "./book.routes.js";
 
 export class Server extends AServer {
     protected DB: Database = new Database()
     private authorRoutes: AuthorRoutes
+    private bookRoutes: BookRoutes
     constructor(app: FastifyInstance) {
         super(app)
-        this.authorRoutes = new AuthorRoutes(this.app)
+        this.authorRoutes = new AuthorRoutes(app)
+        this.bookRoutes = new BookRoutes(app)
     }
     async RunServer(port: number): Promise<void> {
         try {
@@ -38,6 +41,7 @@ export class Server extends AServer {
             }
         })
         this.authorRoutes.setupRoutes()
+        this.bookRoutes.setupRoutes()
         console.log("routes are working!")
     }
 }

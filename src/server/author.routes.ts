@@ -12,6 +12,9 @@ export class AuthorRoutes extends ASetupRoutes {
         this.app.register(async (authorApp) => {
             authorApp.post("/create", this.authorController.CreateAuthor.bind(this.authorController))
             authorApp.get("/all", this.authorController.FindAllAuthors.bind(this.authorController))
+            authorApp.get("/one/:id", this.authorController.FindOneAuthor.bind(this.authorController))
+            authorApp.put("/update/:id", this.authorController.UpdateAuthor.bind(this.authorController))
+            authorApp.delete("/delete/:id", this.authorController.DeleteAuthor.bind(this.authorController))
         }, {prefix: "/authors"})
 
         console.log("author's routes are working")

@@ -1,8 +1,9 @@
 import { getModelForClass, modelOptions, Prop, prop, Ref } from "@typegoose/typegoose";
 import { Author } from "./author.model.js";
 
+
 @modelOptions({schemaOptions: {timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }}})
-class Book {
+export class Book {
     @prop({required: true})
     name!: string
 
@@ -12,8 +13,8 @@ class Book {
     @prop({ref: () => Author, required: true})
     authors!: Ref<Author>[]
 
-    @prop({type: Buffer})
-    pdfData!: Buffer
+    @prop({required: true})
+    file!: Buffer
 
     @Prop()
     createdAt!: Date
