@@ -2,7 +2,8 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import {  pipeline, Writable } from "stream";
 import {once} from "events"
 import { BookService } from "../services/book.service.js";
-import { CreateBookDTO } from "../dto/book.dto.js";
+import { CreateBookDTO, UpdateBookDTO } from "../dto/book.dto.js";
+import { RouteParamsID } from "../types/route-params.js";
 
 export class BookController {
     bookService: BookService
@@ -48,5 +49,41 @@ export class BookController {
         await this.bookService.CreateBook(bookData, pdfBuffer as Buffer<ArrayBufferLike>)
         reply.status(201).send({message: "book was created"})
 
+    }
+    async FindOneBook(request: FastifyRequest<{Params: RouteParamsID}>, reply: FastifyReply) {
+        const id = request.params.id
+        try {
+            const book = await this.bookService.FindOneBook(id)
+            reply.status(200).send(book)
+        } catch(error) {
+            throw error
+        }
+    }
+    async FindBooks(request: FastifyRequest, reply: FastifyReply) {
+        try {
+            const books = await this.bookService.FindBooks()
+            reply.status(200).send(books)
+        } catch (error) {
+            throw error
+        }
+    }
+    async UpdateBook(request: FastifyRequest<{Params: RouteParamsID}>, reply: FastifyReply) {
+        const id = request.params.id
+        const body = request.body as UpdateBookDTO
+        try {
+            await this.bookService.UpdateBook(id, body)
+            reply.status(200).send({message: "book was updated"})
+        } catch (error) {
+            throw error
+        }
+    }
+    async DeleteBook(request:  FastifyRequest<{Params: RouteParamsID}>, reply: FastifyReply) {
+        const id = request.params.id
+        try {
+            await this.bookService.DeleteBook(id)
+            reply.status(200).send({message: "book was deleted"})
+        } catch (error) {
+            throw error
+        }
     }
 }
